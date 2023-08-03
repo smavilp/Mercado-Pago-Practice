@@ -46,19 +46,18 @@ const processPayment = async (req, res) => {
       });
   }
 
-  if (paymentData.payment_method_id === "mercadoPago")
-    //Procesar pago de tarjeta de crédito
+  //Procesar pago de tarjeta de crédito
 
-    mercadopago.payment
-      .save(paymentData)
-      .then(function (response) {
-        const { status, status_detail, id } = response.body;
-        res.status(response.status).json({ status, status_detail, id });
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+  mercadopago.payment
+    .save(paymentData)
+    .then(function (response) {
+      const { status, status_detail, id } = response.body;
+      res.status(response.status).json({ status, status_detail, id });
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
 };
 
 const createPreference = (req, res) => {
@@ -67,25 +66,25 @@ const createPreference = (req, res) => {
       "APP_USR-8724617724714809-071917-e17bfdb5b800bc02ae553ca4da731118-548355142"
   });
 
-  // let preference = {
-  //   // el "purpose": "wallet_purchase" solo permite pagos registrados
-  //   // para permitir pagos de guests puede omitir esta propiedad
-  //   // purpose: "wallet_purchase",
-  //   items: [
-  //     {
-  //       id: "item-ID-1234",
-  //       title: "Meu produto",
-  //       quantity: 1,
-  //       unit_price: 75.76
-  //     }
-  //   ]
-  // };
+  let preference = {
+    // el "purpose": "wallet_purchase" solo permite pagos registrados
+    // para permitir pagos de guests puede omitir esta propiedad
+    // purpose: "wallet_purchase",
+    items: [
+      {
+        id: "item-ID-1234",
+        title: "Meu produto",
+        quantity: 1,
+        unit_price: 75
+      }
+    ]
+  };
 
   mercadopago.preferences
-    .create(req.body)
+    .create(preference)
     .then(function (response) {
-      // Este valor es el ID de preferencia que se enviará al Brick al inicio
-      const preferenceId = response.body.id;
+      const preferenceId = response.body.id; // Este valor es el ID de preferencia que se enviará al Brick al inicio
+      res.json(preferenceId);
     })
     .catch(function (error) {
       console.log(error);

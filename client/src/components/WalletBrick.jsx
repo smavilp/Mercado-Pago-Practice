@@ -4,13 +4,11 @@ import { initMercadoPago } from "@mercadopago/sdk-react";
 
 const WalletBrick = () => {
   initMercadoPago("TEST-ec43da60-8242-44a6-85b4-406179abaa49");
+
   const onSubmit = async (formData) => {
     // callback llamado al hacer clic en Wallet Brick
     // esto es posible porque el Brick es un botón
     // en este momento del envío, debe crear la preferencia
-    // const initialization = {
-    //   preferenceId: "<PREFERENCE_ID>"
-    // };
     const yourRequestBodyHere = {
       items: [
         {
@@ -20,8 +18,8 @@ const WalletBrick = () => {
           quantity: 1,
           unit_price: 10
         }
-      ]
-      // purpose: "wallet_purchase"
+      ],
+      purpose: "wallet_purchase"
     };
     return new Promise((resolve, reject) => {
       fetch("http://localhost:8000/create_preference", {
@@ -33,7 +31,6 @@ const WalletBrick = () => {
       })
         .then((response) => response.json())
         .then((response) => {
-          console.log(response);
           // resolver la promesa con el ID de la preferencia
           resolve(response.preference_id);
         })

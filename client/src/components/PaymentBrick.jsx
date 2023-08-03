@@ -3,24 +3,31 @@ import { Payment } from "@mercadopago/sdk-react";
 import { initMercadoPago } from "@mercadopago/sdk-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import axios from "axios";
+initMercadoPago("TEST-ec43da60-8242-44a6-85b4-406179abaa49");
 const PaymentBrick = () => {
-  initMercadoPago("TEST-ec43da60-8242-44a6-85b4-406179abaa49");
-
   const navigate = useNavigate();
-
+  const [preferenceId, setpreferenceId] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
+
+  // useEffect(() => {
+  //   if (!preferenceId)
+  //     axios.get("http://localhost:8000/create_preference").then((res) => {
+  //       console.log(res.data);
+  //       setpreferenceId(res.data);
+  //     });
+  // }, []);
+
+  const initialization = {
+    amount: 10000,
+    preferenceId
+  };
 
   useEffect(() => {
     if (paymentId) {
       navigate(`/screen_status/${paymentId}`);
     }
   }, [paymentId, navigate]);
-
-  const initialization = {
-    amount: 10000,
-    preferenceId: "<PREFERENCE_ID>"
-  };
 
   const customization = {
     paymentMethods: {
@@ -65,6 +72,11 @@ const PaymentBrick = () => {
   };
 
   const onReady = async () => {
+    if (!preferenceId)
+      axios.get("http://localhost:8000/create_preference").then((res) => {
+        console.log(res.data);
+        setpreferenceId(res.data);
+      });
     /*
       Callback llamado cuando el Brick está listo.
       Aquí puede ocultar cargamentos de su sitio, por ejemplo.
